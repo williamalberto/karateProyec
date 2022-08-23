@@ -8,10 +8,25 @@ Feature: Service cliente POST
 
   Scenario: check the service POST method
     * def requestCreate = {"name": "#(name)", "job": "#(job)"}
-    * def responsePost = read(''classpath:karate/request/responsePost.json)
+    * def responsePost = read('classpath:karate/request/createFeature/responsePost.json')
 
     Given path 'users'
     And request requestCreate
     When method post
     Then status 201
     And match response == responsePost
+
+  Scenario Outline: POST a user with invalid values an id in the url
+    * def nameUser = '<name>'
+    * def responseError = read('classpath:karate/request/createFeature/responseError.html')
+    * def requestCreate = read('classpath:karate/request/createFeature/requestPost.json')
+
+    Given path 'users'
+    And request requestCreate
+    When method POST
+    Then status 400
+    And match response == responseError
+
+    Examples:
+      | name |
+      |****|
